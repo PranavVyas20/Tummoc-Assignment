@@ -70,16 +70,15 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
-    implementation 'com.google.maps.android:maps-compose:2.7.2'
-
+    // Gson
     implementation 'com.google.code.gson:gson:2.9.0'
 
-    // Make sure to also include the latest version of the Maps SDK for Android
+    // Google Maps
+    implementation 'com.google.maps.android:maps-compose:2.7.2'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-
-//    // Also include Compose version `1.2.0-alpha03` or higher - for example:
-//    implementation 'androidx.compose.foundation:foundation:2.7.2-alpha03'
-//
-//    // Optionally, you can include the widgets library if you want to use ScaleBar, etc.
     implementation 'com.google.maps.android:maps-compose-widgets:2.7.2'
+
+    // Material Icons
+    implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
+
 }
