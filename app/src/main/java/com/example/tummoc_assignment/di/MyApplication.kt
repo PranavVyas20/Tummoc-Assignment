@@ -1,4 +1,4 @@
-package com.example.tummoc_assignment
+package com.example.tummoc_assignment.di
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

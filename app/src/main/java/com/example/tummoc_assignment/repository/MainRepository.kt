@@ -2,7 +2,7 @@ package com.example.tummoc_assignment.repository
 
 import android.content.Context
 import android.util.Log
-import com.example.tummoc_assignment.models.ShortestRoute
+import com.example.tummoc_assignment.models.routes.ShortestRoute
 import com.example.tummoc_assignment.util.Constants
 import com.example.tummoc_assignment.util.Resource
 import com.google.gson.Gson

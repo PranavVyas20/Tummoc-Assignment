@@ -1,4 +1,4 @@
-package com.example.tummoc_assignment.models
+package com.example.tummoc_assignment.models.routes
 
 data class ShortestRoute(
     val routes: List<Route>,
