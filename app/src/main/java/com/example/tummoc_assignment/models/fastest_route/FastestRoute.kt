@@ -5,5 +5,6 @@ data class FastestRoute(
     val mediumIconsInfo: List<MediumIconInfo>,
     val duration: String,
     val fare: Double,
-    val distance: Double
+    val distance: Double,
+    val index: Int
 )

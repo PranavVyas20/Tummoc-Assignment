@@ -7,6 +7,7 @@ import com.example.tummoc_assignment.util.Constants
 import com.example.tummoc_assignment.util.Resource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -23,6 +24,7 @@ class MainRepository(context: Context) {
                 jsonString = context.assets.open("routes_response.json").bufferedReader()
                     .use { it.readText() }
                 val shortestRoutes = object : TypeToken<List<ShortestRoute>>() {}.type
+                delay(800)
                 emit(
                     Resource(
                         status = Constants.STATUS_SUCCESS,

@@ -95,6 +95,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getFastestRoutes(shortestRoutes: List<ShortestRoute>) {
+        var idx = 0
         val fastestRoutes = mutableListOf<FastestRoute>()
 
         shortestRoutes.forEach {
@@ -103,9 +104,11 @@ class MainViewModel @Inject constructor(
                 mediumIconsInfo = getMedianIconsInfo(it.routes),
                 duration = it.totalDuration,
                 fare = it.totalFare,
-                distance = it.totalDistance
+                distance = it.totalDistance,
+                index = idx
             )
             fastestRoutes.add(fastestRoute)
+            idx ++
         }
         _fastestRoutesState.value = UIState(isLoading = false, data = fastestRoutes)
     }

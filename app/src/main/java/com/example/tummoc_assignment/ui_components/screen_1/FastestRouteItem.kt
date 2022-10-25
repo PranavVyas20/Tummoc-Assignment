@@ -1,6 +1,8 @@
 package com.example.tummoc_assignment.ui_components.screen_1
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,6 +14,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,14 +31,30 @@ import com.example.tummoc_assignment.models.fastest_route.FastestRoute
 import com.example.tummoc_assignment.models.fastest_route.MediumIconInfo
 import com.example.tummoc_assignment.models.fastest_route.MediumIconWithDuration
 import com.example.tummoc_assignment.ui.theme.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun FastestRouteItem(fastestRoute: FastestRoute) {
     val list = fastestRoute.mediumIconsDuration
     val list2 = fastestRoute.mediumIconsInfo
 
+    val isNeedExpansion = remember { mutableStateOf(false) }
+    val animatedScale: Float by animateFloatAsState(targetValue = if (isNeedExpansion.value) 0.9f else 1f)
+
     Card(
-        modifier = Modifier.padding(bottom = 15.dp),
+        modifier = Modifier
+            .padding(bottom = 15.dp)
+            .scale(animatedScale)
+            .clickable {
+                CoroutineScope(Dispatchers.IO).launch {
+                        isNeedExpansion.value = !isNeedExpansion.value
+                        delay(210)
+                        isNeedExpansion.value = !isNeedExpansion.value
+                    }
+            },
         backgroundColor = White,
         shape = RoundedCornerShape(15.dp)
     ) {
@@ -179,7 +200,6 @@ fun MediumIconWithInfoLayout(list: List<MediumIconInfo>) {
         list.forEach {
             MediumIconWithInfo(mediumIconInfo = it)
         }
-//        Spacer(modifier = Modifier.weight(1f))
         Icon(
             imageVector = Icons.Default.ArrowForwardIos,
             contentDescription = "",
