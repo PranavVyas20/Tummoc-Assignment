@@ -3,14 +3,17 @@ package com.example.tummoc_assignment.viewmodel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tummoc_assignment.models.fastest_route.FastestRoute
 import com.example.tummoc_assignment.models.fastest_route.MediumIconInfo
+import com.example.tummoc_assignment.models.fastest_route.MediumIconWithDuration
 import com.example.tummoc_assignment.models.routes.Route
 import com.example.tummoc_assignment.models.routes.ShortestRoute
 import com.example.tummoc_assignment.repository.MainRepository
+import com.example.tummoc_assignment.ui.theme.busMediumColor
+import com.example.tummoc_assignment.ui.theme.walkMediumColor
 import com.example.tummoc_assignment.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -23,9 +26,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     data class UIState<T : Any>(
-        val isLoading: Boolean = true,
-        var data: T? = null,
-        val error: String = ""
+        val isLoading: Boolean = true, var data: T? = null, val error: String = ""
     )
 
     private val _shortestRoutesState = mutableStateOf<UIState<List<ShortestRoute>>>(UIState())
@@ -34,14 +35,32 @@ class MainViewModel @Inject constructor(
     private val _fastestRoutesState = mutableStateOf<UIState<List<FastestRoute>>>(UIState())
     val fastestRouteState get() = _fastestRoutesState
 
-    private fun getMedianIcons(routes: List<Route>): List<ImageVector> {
-        val medianIcons = mutableListOf<ImageVector>()
-        routes.forEach { route ->
-            val icon =
-                if (route.medium == Constants.Median.WALK) Icons.Default.DirectionsWalk else Icons.Default.DirectionsBus
-            medianIcons.add(icon)
+    private fun getDurationWeight(duration: String): Float {
+        // Convert the time in mins and use that as line weight
+        val hr = duration.substring(0, 2).toFloat()
+        val mins = duration.substring(3, 5).toFloat()
+        // If 0 mins and some secs
+        if (duration.substring(3, 5) == "00") {
+            return 5f
         }
-        return medianIcons
+        if(mins <= 5) {
+            return 7f
+        }
+        return (hr * 60) + mins
+    }
+
+    private fun getMedianIconsWithWeight(routes: List<Route>): List<MediumIconWithDuration> {
+        val medianIconsDuration = mutableListOf<MediumIconWithDuration>()
+        routes.forEach { route ->
+            val busIcon = Icons.Default.DirectionsBus
+            val walkIcon = Icons.Default.DirectionsWalk
+            val icon = if (route.medium == Constants.Median.WALK) walkIcon else busIcon
+            val color = if (route.medium == Constants.Median.WALK) busMediumColor else walkMediumColor
+
+            val duration = getDurationWeight(route.duration)
+            medianIconsDuration.add(MediumIconWithDuration(icon, duration, color))
+        }
+        return medianIconsDuration
     }
 
     private fun getMedianIconsInfo(routes: List<Route>): List<MediumIconInfo> {
@@ -80,7 +99,7 @@ class MainViewModel @Inject constructor(
 
         shortestRoutes.forEach {
             val fastestRoute = FastestRoute(
-                mediumIcons = getMedianIcons(it.routes),
+                mediumIconsDuration = getMedianIconsWithWeight(it.routes),
                 mediumIconsInfo = getMedianIconsInfo(it.routes),
                 duration = it.totalDuration,
                 fare = it.totalFare,
