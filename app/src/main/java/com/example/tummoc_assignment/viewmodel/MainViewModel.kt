@@ -25,10 +25,6 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val repository: MainRepository
 ) : ViewModel() {
-
-    init {
-        Log.d("initVm","vm inited")
-    }
     data class UIState<T : Any>(
         val isLoading: Boolean = true, var data: T? = null, val error: String = ""
     )

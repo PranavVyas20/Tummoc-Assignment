@@ -24,6 +24,7 @@ class MainRepository(context: Context) {
                 jsonString = context.assets.open("routes_response.json").bufferedReader()
                     .use { it.readText() }
                 val shortestRoutes = object : TypeToken<List<ShortestRoute>>() {}.type
+                delay(500)
                 emit(
                     Resource(
                         status = Constants.STATUS_SUCCESS,

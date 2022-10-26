@@ -12,8 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.tummoc_assignment.models.routes.Route
 import com.example.tummoc_assignment.ui_components.screen_2.SelectedRouteItem
 import com.example.tummoc_assignment.viewmodel.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -23,9 +21,9 @@ import com.google.maps.android.compose.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Screen2(navController: NavController, viewModel: MainViewModel) {
+fun Screen2(viewModel: MainViewModel) {
 
-    if(viewModel.currentSelectedRoutes.isNotEmpty()) {
+    if (viewModel.currentSelectedRoutes.isNotEmpty()) {
         val list = viewModel.currentSelectedRoutes
 
         val lastIdx = list.size - 1
@@ -44,9 +42,10 @@ fun Screen2(navController: NavController, viewModel: MainViewModel) {
         val cameraPositionState = rememberCameraPositionState {
             position = CameraPosition.fromLatLngZoom(sourceCoordinates.value, 11f)
         }
-        var isMapLoaded = remember { mutableStateOf(false) }
+        val isMapLoaded = remember { mutableStateOf(false) }
 
         BottomSheetScaffold(
+            sheetPeekHeight = 90.dp,
             sheetContent = {
                 if (isMapLoaded.value) {
                     Box(Modifier.heightIn(min = 0.dp, max = 380.dp)) {
@@ -77,7 +76,7 @@ fun Screen2(navController: NavController, viewModel: MainViewModel) {
                 }
 
             },
-            sheetBackgroundColor = Color.White
+            sheetBackgroundColor = Color.White,
         ) {
             GoogleMapView(
                 cameraPositionState,

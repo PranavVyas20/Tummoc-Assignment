@@ -1,12 +1,9 @@
 package com.example.tummoc_assignment.screens
 
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -17,10 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.tummoc_assignment.models.fastest_route.FastestRoute
 import com.example.tummoc_assignment.models.routes.Route
@@ -31,11 +26,6 @@ import com.example.tummoc_assignment.ui_components.screen_1.DestinationSearchLay
 import com.example.tummoc_assignment.ui_components.screen_1.FastestRouteItem
 import com.example.tummoc_assignment.ui_components.screen_1.TravellingMediumLayout
 import com.example.tummoc_assignment.viewmodel.MainViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
 
 @Composable
 fun Screen1(viewModel: MainViewModel, navController: NavHostController) {
@@ -113,8 +103,4 @@ fun FastestRouteLayout(
             )
         })
     }
-}
-
-private fun goToNextScreen(shortestRoute: ShortestRoute) {
-    Log.d("funCheck", shortestRoute.toString())
 }
