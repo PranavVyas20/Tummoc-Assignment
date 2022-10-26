@@ -5,5 +5,4 @@ data class ShortestRoute(
     val totalDuration: String,
     val totalFare: Double,
     val totalDistance: Double
-
 )

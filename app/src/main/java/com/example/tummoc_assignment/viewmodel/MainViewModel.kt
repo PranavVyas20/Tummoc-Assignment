@@ -1,9 +1,9 @@
 package com.example.tummoc_assignment.viewmodel
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tummoc_assignment.models.fastest_route.FastestRoute
@@ -15,6 +15,7 @@ import com.example.tummoc_assignment.repository.MainRepository
 import com.example.tummoc_assignment.ui.theme.busMediumColor
 import com.example.tummoc_assignment.ui.theme.walkMediumColor
 import com.example.tummoc_assignment.util.Constants
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -35,6 +36,53 @@ class MainViewModel @Inject constructor(
     private val _fastestRoutesState = mutableStateOf<UIState<List<FastestRoute>>>(UIState())
     val fastestRouteState get() = _fastestRoutesState
 
+    private val _totalJourneyCoordState = mutableStateOf<UIState<List<LatLng>>>(UIState())
+    val totalJourneyCoordState get() = _totalJourneyCoordState
+
+     fun getTotalJourneyCoords(routes: List<Route>) {
+        val coordsList = mutableListOf<LatLng>()
+
+        routes.forEach { eachRoute ->
+            coordsList.add(LatLng(eachRoute.sourceLat, eachRoute.sourceLat))
+            if (eachRoute.trails != null) {
+                eachRoute.trails.forEach { eachTrail ->
+                    coordsList.add(LatLng(eachTrail.latitude, eachTrail.longitude))
+                }
+            }
+        }
+         Log.d("checkTag", coordsList.toString())
+        _totalJourneyCoordState.value = UIState(false, coordsList)
+    }
+
+    private fun formatDistance(distanceInKms: Double): String {
+        // eg - 12.223km - 12 km
+        if (distanceInKms >= 1) {
+            return "${distanceInKms.toInt()} Km"
+        }
+        // eg - 0.12322 - 123 mtrs
+        val inMtrs = (distanceInKms * 1000).toInt()
+        return if (inMtrs == 0) {
+            "1 Mtr"
+        } else {
+            "$inMtrs Mtr"
+        }
+    }
+
+    private fun formatDuration(duration: String): String {
+        val hr = duration.substring(0, 2)
+        val mins = duration.substring(3, 5)
+
+        // Check if 0 hrs
+        val formattedDuration: String = if (hr != "00") {
+            "$hr hrs $mins mins"
+        } else if (mins == "00") {
+            "01 mins"
+        } else {
+            "$mins mins"
+        }
+        return formattedDuration
+    }
+
     private fun getDurationWeight(duration: String): Float {
         // Convert the time in mins and use that as line weight
         val hr = duration.substring(0, 2).toFloat()
@@ -43,7 +91,7 @@ class MainViewModel @Inject constructor(
         if (duration.substring(3, 5) == "00") {
             return 5f
         }
-        if(mins <= 5) {
+        if (mins <= 5) {
             return 7f
         }
         return (hr * 60) + mins
@@ -55,7 +103,8 @@ class MainViewModel @Inject constructor(
             val busIcon = Icons.Default.DirectionsBus
             val walkIcon = Icons.Default.DirectionsWalk
             val icon = if (route.medium == Constants.Median.WALK) walkIcon else busIcon
-            val color = if (route.medium == Constants.Median.WALK) busMediumColor else walkMediumColor
+            val color =
+                if (route.medium == Constants.Median.WALK) busMediumColor else walkMediumColor
 
             val duration = getDurationWeight(route.duration)
             medianIconsDuration.add(MediumIconWithDuration(icon, duration, color))
@@ -108,7 +157,7 @@ class MainViewModel @Inject constructor(
                 index = idx
             )
             fastestRoutes.add(fastestRoute)
-            idx ++
+            idx++
         }
         _fastestRoutesState.value = UIState(isLoading = false, data = fastestRoutes)
     }
@@ -125,6 +174,13 @@ class MainViewModel @Inject constructor(
                     _shortestRoutesState.value = UIState(
                         isLoading = false, data = result.data
                     )
+                    result.data!!.forEach {
+                        val routes = it.routes
+                        routes.forEach { route ->
+                            route.formattedDuration = formatDuration(route.duration)
+                            route.formattedDistance = formatDistance(route.distance)
+                        }
+                    }
                     getFastestRoutes(result.data!!)
                 }
                 Constants.STATUS_ERROR -> {

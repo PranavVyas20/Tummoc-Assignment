@@ -2,14 +2,15 @@ package com.example.tummoc_assignment.ui_components
 
 import android.graphics.Paint.Align
 import android.graphics.drawable.Icon
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -32,26 +33,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.tummoc_assignment.R
 import com.example.tummoc_assignment.models.fastest_route.MediumIconWithDuration
+import com.google.accompanist.flowlayout.FlowColumn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-//@Preview
-//@Composable
-//fun TestComponent() {
-//    val transition = animateFlo(targetValue = Color.Blue, animationSpec = repeatable(
-//        1, animation = tween(800,100, FastOutLinearInEasing),
-//        repeatMode = RepeatMode.Reverse
-//    ))
-//    Box(
-//        modifier = Modifier
-//            .background(Color.Red)
-//            .height(30.dp)
-//            .width(30.dp)
-//    )
-//}
-
+/*
 @Preview
 @Composable
 private fun AnimateDpAsState() {
@@ -88,4 +76,54 @@ fun CircleImage(size: Float) {
         Spacer(modifier = Modifier.height(50.dp))
     }
 }
+*/
+@Composable
+fun TestComponent() {
+    val list1 = listOf(1, 2, 3, 4, 5)
+    val list2 = listOf('a', 'b', 'c', 'd', 'e', 'd', 'f')
+    nestedLazysTest(list1 = list1, list2 = list2)
 
+}
+
+@Composable
+fun nestedLazysTest(list1: List<Int>, list2: List<Char>) {
+    LazyColumn {
+        items(list1) { item ->
+            lazyItem(str = item.toString(), list2)
+        }
+    }
+}
+
+@Composable
+fun lazyItem(str: String, mList2: List<Char>) {
+    val expandedState = remember { mutableStateOf(false) }
+    Card(
+        backgroundColor = Color.Red, modifier = Modifier
+            .padding(15.dp)
+            .fillMaxWidth()
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = str, modifier = Modifier.padding(20.dp))
+            Button(onClick = { expandedState.value = !expandedState.value }) {
+                Text(text = "Click to expand")
+            }
+            AnimatedVisibility(visible = expandedState.value) {
+                Column(
+                    Modifier
+                        .height(90.dp)
+                        .verticalScroll(rememberScrollState())) {
+                    mList2.forEach {
+                        Text(text = it.toString())
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+@Preview
+@Composable
+fun lazyPreview() {
+    TestComponent()
+}

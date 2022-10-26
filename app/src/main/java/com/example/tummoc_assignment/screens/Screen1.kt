@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.tummoc_assignment.models.fastest_route.FastestRoute
+import com.example.tummoc_assignment.models.routes.ShortestRoute
 import com.example.tummoc_assignment.ui.theme.buttonOrangeColor
 import com.example.tummoc_assignment.ui_components.screen_1.DestinationSearchLayout
 import com.example.tummoc_assignment.ui_components.screen_1.FastestRouteItem
@@ -35,6 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun Screen1(viewModel: MainViewModel) {
     val fastestRouteState = viewModel.fastestRouteState.value
+    val shortestRouteState = viewModel.shortestRouteState.value
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getShortestRoutes()
@@ -52,10 +54,16 @@ fun Screen1(viewModel: MainViewModel) {
                 text = "FASTEST ROUTE",
                 fontWeight = FontWeight.Bold
             )
-            if(fastestRouteState.isLoading) {
-                CircularProgressIndicator(Modifier.padding(top = 30.dp).align(Alignment.CenterHorizontally))
+            if (fastestRouteState.isLoading) {
+                CircularProgressIndicator(
+                    Modifier
+                        .padding(top = 30.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
             }
-            FastestRouteLayout(fastestRoutes = fastestRouteState.data ?: listOf())
+            if(fastestRouteState.data!=null) {
+                FastestRouteLayout(fastestRoutes = fastestRouteState.data!!, shortestRouteState.data!!)
+            }
         }
 
     }
@@ -75,16 +83,21 @@ fun FloatingActionButton() {
 }
 
 @Composable
-fun FastestRouteLayout(fastestRoutes: List<FastestRoute>) {
+fun FastestRouteLayout(fastestRoutes: List<FastestRoute>, shortestRoutes: List<ShortestRoute>) {
     LazyColumn(
         Modifier
             .wrapContentHeight()
             .padding(15.dp)
     ) {
-        items(items = fastestRoutes, itemContent = { item ->
+        itemsIndexed(items = fastestRoutes, itemContent = { idx, item ->
             FastestRouteItem(
-                item
+                fastestRoute = item,
+                onClick = { goToNextScreen(shortestRoutes[idx]) }
             )
         })
     }
+}
+
+private fun goToNextScreen(shortestRoute: ShortestRoute) {
+    Log.d("funCheck", shortestRoute.toString())
 }

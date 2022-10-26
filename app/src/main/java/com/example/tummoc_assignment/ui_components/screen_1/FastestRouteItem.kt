@@ -37,7 +37,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun FastestRouteItem(fastestRoute: FastestRoute) {
+fun FastestRouteItem(fastestRoute: FastestRoute, onClick: () -> Unit) {
     val list = fastestRoute.mediumIconsDuration
     val list2 = fastestRoute.mediumIconsInfo
 
@@ -53,6 +53,7 @@ fun FastestRouteItem(fastestRoute: FastestRoute) {
                         isNeedExpansion.value = !isNeedExpansion.value
                         delay(210)
                         isNeedExpansion.value = !isNeedExpansion.value
+                    onClick()
                     }
             },
         backgroundColor = White,

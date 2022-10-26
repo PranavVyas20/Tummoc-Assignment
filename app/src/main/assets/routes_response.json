@@ -3,6 +3,7 @@
     "routeTitle": "Shortest",
     "routes": [
       {
+        "isFinalRoute": null,
         "sourceLat": 12.960165,
         "sourceLong": 77.57717,
         "sourceTitle": "Your Location",
@@ -25,6 +26,7 @@
         "trails": null
       },
       {
+        "isFinalRoute": null,
         "sourceLat": 12.9602,
         "sourceLong": 77.5772,
         "sourceTitle": "KR Market (Kalasipalya)",
@@ -377,6 +379,7 @@
         ]
       },
       {
+        "isFinalRoute": true,
         "sourceLat": 12.8445,
         "sourceLong": 77.4871,
         "sourceTitle": "Agara (Towards Gangasandra)",
@@ -407,6 +410,7 @@
     "routeTitle": "Shortest",
     "routes": [
       {
+        "isFinalRoute": null,
         "sourceLat": 12.960165,
         "sourceLong": 77.57717,
         "sourceTitle": "Your Location",
@@ -429,6 +433,7 @@
         "trails": null
       },
       {
+        "isFinalRoute": null,
         "sourceLat": 12.9602,
         "sourceLong": 77.5772,
         "sourceTitle": "KR Market (Kalasipalya)",
@@ -781,6 +786,7 @@
         ]
       },
       {
+        "isFinalRoute": true,
         "sourceLat": 12.8445,
         "sourceLong": 77.4871,
         "sourceTitle": "Agara (Towards Gangasandra)",
@@ -811,6 +817,7 @@
     "routeTitle": "Shortest",
     "routes": [
       {
+        "isFinalRoute": null,
         "sourceLat": 12.960165,
         "sourceLong": 77.57717,
         "sourceTitle": "Your Location",
@@ -833,6 +840,7 @@
         "trails": null
       },
       {
+        "isFinalRoute": null,
         "sourceLat": 12.9602,
         "sourceLong": 77.5772,
         "sourceTitle": "KR Market (Kalasipalya)",
@@ -879,6 +887,7 @@
         ]
       },
       {
+        "isFinalRoute": null,
         "sourceLat": 12.9566,
         "sourceLong": 77.5738,
         "sourceTitle": "Makkala Koota",
@@ -1141,6 +1150,7 @@
         ]
       },
       {
+        "isFinalRoute": true,
         "sourceLat": 12.8445,
         "sourceLong": 77.4871,
         "sourceTitle": "Agara (Towards Gangasandra)",
