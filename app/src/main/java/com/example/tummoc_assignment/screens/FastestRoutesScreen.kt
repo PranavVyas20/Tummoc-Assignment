@@ -29,10 +29,13 @@ import com.example.tummoc_assignment.viewmodel.MainViewModel
 
 @Composable
 fun Screen1(viewModel: MainViewModel, navController: NavHostController) {
+    Log.d("recomposed", "recomposed screen 1")
     val fastestRouteState = viewModel.fastestRouteState.value
     val shortestRouteState = viewModel.shortestRouteState.value
 
     LaunchedEffect(key1 = Unit) {
+        Log.d("recomposed", "launched effect called")
+
         viewModel.getShortestRoutes()
     }
 
@@ -48,14 +51,14 @@ fun Screen1(viewModel: MainViewModel, navController: NavHostController) {
                 text = "FASTEST ROUTE",
                 fontWeight = FontWeight.Bold
             )
-            if (fastestRouteState.isLoading) {
+            if (fastestRouteState.isLoading || shortestRouteState.data == null) {
                 CircularProgressIndicator(
                     Modifier
                         .padding(top = 30.dp)
                         .align(Alignment.CenterHorizontally)
                 )
             }
-            if (fastestRouteState.data != null) {
+            if (fastestRouteState.data != null && shortestRouteState.data != null) {
                 FastestRouteLayout(
                     fastestRoutes = fastestRouteState.data!!,
                     shortestRoutes = shortestRouteState.data!!,
@@ -64,7 +67,6 @@ fun Screen1(viewModel: MainViewModel, navController: NavHostController) {
                 )
             }
         }
-
     }
 }
 
@@ -98,7 +100,7 @@ fun FastestRouteLayout(
                 fastestRoute = item,
                 onClick = {
                     viewModel.currentSelectedRoutes = shortestRoutes[idx].routes as MutableList<Route>
-                    navController.navigate(Screen.Screen2.route)
+                    navController.navigate(Screen.SelectedRouteScreen.route)
                 }
             )
         })

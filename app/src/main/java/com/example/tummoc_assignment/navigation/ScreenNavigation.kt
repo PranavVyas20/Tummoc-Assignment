@@ -13,15 +13,15 @@ fun ScreenNavigation(
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
-    NavHost(navController = navController, startDestination = Screen.Screen1.route) {
+    NavHost(navController = navController, startDestination = Screen.FastestRouteScreen.route) {
         composable(
-            route = Screen.Screen1.route
+            route = Screen.FastestRouteScreen.route
         ) {
             Screen1(viewModel = viewModel, navController = navController)
         }
 
         composable(
-            route = Screen.Screen2.route
+            route = Screen.SelectedRouteScreen.route
         ) {
             Screen2(viewModel = viewModel)
         }
