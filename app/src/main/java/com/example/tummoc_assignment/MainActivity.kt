@@ -18,6 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.tummoc_assignment.navigation.Screen
+import com.example.tummoc_assignment.navigation.ScreenNavigation
 import com.example.tummoc_assignment.screens.Screen1
 import com.example.tummoc_assignment.screens.Screen2
 import com.example.tummoc_assignment.ui.theme.TummocAssignmentTheme
@@ -31,15 +36,17 @@ import com.google.maps.android.compose.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-@OptIn(ExperimentalMaterialApi::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TummocAssignmentTheme {
-
-
+                val navController = rememberNavController()
                 val vm = hiltViewModel<MainViewModel>()
+
+                ScreenNavigation(navController = navController, viewModel = vm)
+
+/*
                 val tempState = vm.shortestRouteState.value
                 LaunchedEffect(key1 = Unit) {
                     vm.getShortestRoutes()
@@ -47,9 +54,11 @@ class MainActivity : ComponentActivity() {
                 if (tempState.data != null) {
                     Screen2(list = tempState.data!![2].routes, vm)
                 }
+*/
 
 
+                }
             }
         }
     }
-}
+

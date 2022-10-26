@@ -49,12 +49,12 @@ fun FastestRouteItem(fastestRoute: FastestRoute, onClick: () -> Unit) {
             .padding(bottom = 15.dp)
             .scale(animatedScale)
             .clickable {
-                CoroutineScope(Dispatchers.IO).launch {
-                        isNeedExpansion.value = !isNeedExpansion.value
-                        delay(210)
-                        isNeedExpansion.value = !isNeedExpansion.value
+                CoroutineScope(Dispatchers.Main).launch {
+                    isNeedExpansion.value = !isNeedExpansion.value
+                    delay(100)
+                    isNeedExpansion.value = !isNeedExpansion.value
                     onClick()
-                    }
+                }
             },
         backgroundColor = White,
         shape = RoundedCornerShape(15.dp)

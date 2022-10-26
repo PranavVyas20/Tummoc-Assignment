@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.tummoc_assignment.models.routes.Route
 import com.example.tummoc_assignment.ui_components.screen_2.SelectedRouteItem
 import com.example.tummoc_assignment.viewmodel.MainViewModel
@@ -22,66 +23,71 @@ import com.google.maps.android.compose.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Screen2(list: List<Route>, vm: MainViewModel) {
+fun Screen2(navController: NavController, viewModel: MainViewModel) {
 
-    val lastIdx = list.size - 1
-    val sourceCoordinates =
-        remember { mutableStateOf(LatLng(list[0].sourceLat, list[0].sourceLong)) }
+    if(viewModel.currentSelectedRoutes.isNotEmpty()) {
+        val list = viewModel.currentSelectedRoutes
 
-    val destinationCoordinates = remember {
-        mutableStateOf(
-            LatLng(
-                list[lastIdx].destinationLat,
-                list[lastIdx].destinationLong
+        val lastIdx = list.size - 1
+        val sourceCoordinates =
+            remember { mutableStateOf(LatLng(list[0].sourceLat, list[0].sourceLong)) }
+
+        val destinationCoordinates = remember {
+            mutableStateOf(
+                LatLng(
+                    list[lastIdx].destinationLat,
+                    list[lastIdx].destinationLong
+                )
             )
-        )
-    }
+        }
 
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(sourceCoordinates.value, 11f)
-    }
-    var isMapLoaded = remember { mutableStateOf(false) }
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(sourceCoordinates.value, 11f)
+        }
+        var isMapLoaded = remember { mutableStateOf(false) }
 
-    BottomSheetScaffold(
-        sheetContent = {
-            if (isMapLoaded.value) {
-                Box(Modifier.heightIn(min = 0.dp, max = 380.dp)) {
-                    LazyColumn(Modifier.padding(15.dp)) {
-                        items(list) { item ->
-                            SelectedRouteItem(
-                                selectedRoute = item,
-                                onClick = {
-                                    cameraPositionState.move(
-                                        CameraUpdateFactory.newLatLng(
-                                            LatLng(
-                                                item.sourceLat,
-                                                item.sourceLong
+        BottomSheetScaffold(
+            sheetContent = {
+                if (isMapLoaded.value) {
+                    Box(Modifier.heightIn(min = 0.dp, max = 380.dp)) {
+                        LazyColumn(Modifier.padding(15.dp)) {
+                            items(list) { item ->
+                                SelectedRouteItem(
+                                    selectedRoute = item,
+                                    onClick = {
+                                        cameraPositionState.move(
+                                            CameraUpdateFactory.newLatLng(
+                                                LatLng(
+                                                    item.sourceLat,
+                                                    item.sourceLong
+                                                )
                                             )
                                         )
-                                    )
-                                    sourceCoordinates.value =
-                                        LatLng(item.sourceLat, item.sourceLong)
-                                    destinationCoordinates.value =
-                                        LatLng(item.destinationLat, item.destinationLong)
-                                })
+                                        sourceCoordinates.value =
+                                            LatLng(item.sourceLat, item.sourceLong)
+                                        destinationCoordinates.value =
+                                            LatLng(item.destinationLat, item.destinationLong)
+                                    })
+                            }
                         }
                     }
                 }
-            }
-            if (!isMapLoaded.value) {
-                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
-            }
+                if (!isMapLoaded.value) {
+                    CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                }
 
-        },
-        sheetBackgroundColor = Color.White
-    ) {
-        GoogleMapView(
-            cameraPositionState,
-            isMapLoaded,
-            sourceCoordinates.value,
-            destinationCoordinates.value,
-        )
+            },
+            sheetBackgroundColor = Color.White
+        ) {
+            GoogleMapView(
+                cameraPositionState,
+                isMapLoaded,
+                sourceCoordinates.value,
+                destinationCoordinates.value,
+            )
+        }
     }
+
 }
 
 

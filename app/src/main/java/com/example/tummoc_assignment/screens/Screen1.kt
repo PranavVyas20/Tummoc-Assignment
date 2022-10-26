@@ -20,8 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.tummoc_assignment.models.fastest_route.FastestRoute
+import com.example.tummoc_assignment.models.routes.Route
 import com.example.tummoc_assignment.models.routes.ShortestRoute
+import com.example.tummoc_assignment.navigation.Screen
 import com.example.tummoc_assignment.ui.theme.buttonOrangeColor
 import com.example.tummoc_assignment.ui_components.screen_1.DestinationSearchLayout
 import com.example.tummoc_assignment.ui_components.screen_1.FastestRouteItem
@@ -34,7 +38,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun Screen1(viewModel: MainViewModel) {
+fun Screen1(viewModel: MainViewModel, navController: NavHostController) {
     val fastestRouteState = viewModel.fastestRouteState.value
     val shortestRouteState = viewModel.shortestRouteState.value
 
@@ -61,8 +65,13 @@ fun Screen1(viewModel: MainViewModel) {
                         .align(Alignment.CenterHorizontally)
                 )
             }
-            if(fastestRouteState.data!=null) {
-                FastestRouteLayout(fastestRoutes = fastestRouteState.data!!, shortestRouteState.data!!)
+            if (fastestRouteState.data != null) {
+                FastestRouteLayout(
+                    fastestRoutes = fastestRouteState.data!!,
+                    shortestRoutes = shortestRouteState.data!!,
+                    navController = navController,
+                    viewModel = viewModel
+                )
             }
         }
 
@@ -83,7 +92,12 @@ fun FloatingActionButton() {
 }
 
 @Composable
-fun FastestRouteLayout(fastestRoutes: List<FastestRoute>, shortestRoutes: List<ShortestRoute>) {
+fun FastestRouteLayout(
+    fastestRoutes: List<FastestRoute>,
+    shortestRoutes: List<ShortestRoute>,
+    viewModel: MainViewModel,
+    navController: NavHostController
+) {
     LazyColumn(
         Modifier
             .wrapContentHeight()
@@ -92,7 +106,10 @@ fun FastestRouteLayout(fastestRoutes: List<FastestRoute>, shortestRoutes: List<S
         itemsIndexed(items = fastestRoutes, itemContent = { idx, item ->
             FastestRouteItem(
                 fastestRoute = item,
-                onClick = { goToNextScreen(shortestRoutes[idx]) }
+                onClick = {
+                    viewModel.currentSelectedRoutes = shortestRoutes[idx].routes as MutableList<Route>
+                    navController.navigate(Screen.Screen2.route)
+                }
             )
         })
     }
